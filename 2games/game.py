@@ -1,14 +1,13 @@
 # 1.Позиции для х и о
 # 2.Убедиться что доска пустая
 # 3.Убедиться что игра работает при заняятой ячейке
-
+import os
+import sys
 
 theBoards = {'7':'','8':'','9':'',
              '4':'','5':'','6':'',
              '1':'','2':'','3':''}
 
-for key in theBoards:
-    theBoards[key]=''
 
 boardKeys=[]
 
@@ -25,24 +24,31 @@ def printBoard(board):
 
     print(board['1'] + '    |' + board['2'] + '    |' + board['3'])
 
-theBoards
-
 def game():
+    os.system('CLS')
+    for key in theBoards:
+        theBoards[key]=''
     turn='X'
     count = 0
-    print(count)
+    move = 777
     for i in range(1000):
         printBoard(theBoards)
         print(f'Сейчас ход игрока: {turn}')
 
-        move = input('Ходи:')
-        if theBoards[move] == '':
-            theBoards[move] = turn
-            count+=1
-        else:
-            print('Ячейка занята, выбери другую')
-            count = count
-            print(count)
+        move = input(f'Выбирай клетку игрок {turn}: ')
+        os.system('CLS')
+        try:
+            if move == 'ex':
+                sys.exit(1)
+            elif theBoards[move] == '':
+                theBoards[move] = turn
+                count+=1
+            else:
+                print('Ячейка занята, выбери другую!')
+                count = count
+                continue
+        except KeyError:
+            print ("Ошибка! Введено пустое или неверное значение. Выберите значение от 1 до 9.Повторите ход. Для выхода введите 'ex' ")
             continue
         if count >= 5:
             if     theBoards['7'] == theBoards['8'] == theBoards['9'] != '' \
@@ -64,11 +70,14 @@ def game():
         else:
             turn = 'X'
 
-    restart = input('Еще разик? Введи зачение y/n: ')
+
+    restart = input('Повторим? Введи зачение \'y\' или нажмите ENTER для завершения игры: ')
     if restart == 'y' or restart == 'Y':
         for key in theBoards:
             theBoards[key] = ''
         game()
+    else:
+        sys.exit(1)
 
 if __name__=='__main__':
     game()

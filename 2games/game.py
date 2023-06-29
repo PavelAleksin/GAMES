@@ -4,8 +4,11 @@
 
 
 theBoards = {'7':'','8':'','9':'',
-             '4':'','5':'5','6':'',
+             '4':'','5':'','6':'',
              '1':'','2':'','3':''}
+
+for key in theBoards:
+    theBoards[key]=''
 
 boardKeys=[]
 
@@ -21,53 +24,54 @@ def printBoard(board):
     print('----|----|----')
 
     print(board['1'] + '    |' + board['2'] + '    |' + board['3'])
-    
-def game():
 
+theBoards
+
+def game():
     turn='X'
     count = 0
-    
-    for i in range(10):
+    print(count)
+    for i in range(1000):
         printBoard(theBoards)
-        print(f'Первым ходит{turn}')
+        print(f'Сейчас ход игрока: {turn}')
 
-        move = input()
+        move = input('Ходи:')
         if theBoards[move] == '':
             theBoards[move] = turn
             count+=1
         else:
             print('Ячейка занята, выбери другую')
+            count = count
+            print(count)
             continue
         if count >= 5:
-            if theBoards['7'] == theBoards['8'] == theBoards['9'] !='':
-                printBoard(theBoards)
+            if     theBoards['7'] == theBoards['8'] == theBoards['9'] != '' \
+                or theBoards['4'] == theBoards['5'] == theBoards['6'] != ''\
+                or theBoards['1'] == theBoards['2'] == theBoards['3'] != ''\
+                or theBoards['1'] == theBoards['4'] == theBoards['7'] != ''\
+                or theBoards['2'] == theBoards['5'] == theBoards['8'] != ''\
+                or theBoards['3'] == theBoards['6'] == theBoards['9'] != ''\
+                or theBoards['1'] == theBoards['5'] == theBoards['9'] != ''\
+                or theBoards['7'] == theBoards['5'] == theBoards['3'] != '':
                 print('Game Over')
                 print(f'Player {turn} WIN!')
                 break
-            if theBoards['4'] == theBoards['5'] == theBoards['6'] !='':
-                printBoard(theBoards)
-                print('Game Over')
-                print(f'Player {turn} WIN!')
+            elif count == 9:
+                print('Ничья')
                 break
+        if turn =='X':
+            turn = 'O'
+        else:
+            turn = 'X'
 
-            if theBoards['1'] == theBoards['2'] == theBoards['3'] !='':
-                printBoard(theBoards)
-                print('Game Over')
-                print(f'Player {turn} WIN!')
-                break
-            
-            if theBoards['1'] == theBoards['5'] == theBoards['9'] !='':
-                printBoard(theBoards)
-                print('Game Over')
-                print(f'Player {turn} WIN!')
-                break
-            if theBoards['3'] == theBoards['5'] == theBoards['7'] !='':
-                printBoard(theBoards)
-                print('Game Over')
-                print(f'Player {turn} WIN!')
-                break
-    
+    restart = input('Еще разик? Введи зачение y/n: ')
+    if restart == 'y' or restart == 'Y':
+        for key in theBoards:
+            theBoards[key] = ''
+        game()
 
+if __name__=='__main__':
+    game()
 
 
 

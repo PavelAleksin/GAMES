@@ -16,7 +16,7 @@ for key in theBoards:
     boardKeys.append(key)
 
 def printBoard(board):
-
+    
     print(board['7'] + '    |' + board['8'] + '    |' + board['9'])
     print('----|----|----')
 

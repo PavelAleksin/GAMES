@@ -2,6 +2,74 @@ import tkinter as tk
 
 
 
+class Game(tk.Frame):
+    def __init__(self, master):
+        super(Game,self).__init__(master)
+        self.width = 1000;
+        self.height =400;
+
+        self.canvas = tk.Canvas(self,bg='darkorange',width= self.width,
+                                height=self.height)
+        
+        self.canvas.pack()
+        self.pack()
+
+        self.items ={}
+        self.ball = None
+
+        self.paddle=Paddle(self.canvas, self.width/2, 320)
+        self.items[self.paddle.item]=self.paddle
+        
+        for x in range(100,self.width - 100, 60):
+            self.display_brick(x+20, 50, 2)
+
+        self.hud =None
+        self.init_game()
+        self.canvas.focus_set()
+        self.canvas.bind('<Left>',
+                         lambda _:self.paddle.move(-20))
+        self.canvas.bind('<Right>',
+                         lambda _:self.paddle.move(20))
+
+
+    def init_game(self):
+        self.display_ball()
+        self.start_game()
+
+    def display_ball(self):
+        if self.ball is not None:
+            self.ball.delete()
+        paddle_coords = self.paddle.position()
+        x=(paddle_coords[0]+paddle_coords[2])*0.5
+        self.ball = Ball(self.canvas,x,310)
+        self.paddle.set_ball(self.ball)
+
+    def display_brick(self,x,y,hits):
+        brick = Brick(self.canvas,x,y,hits)
+        self.items[brick.item] = brick
+
+
+    def start_game(self):
+        self.canvas.unbind('<space>')
+        self.paddle.ball= None
+    
+    def game_loop(self):
+        num_bricks = len(self.canvas.find_withtag('brick'))
+    
+        if num_bricks ==0:
+            self.ball.speed = None
+        else:
+            self.ball.update()
+            self.after(50, self.game_loop())
+
+
+if __name__=='__main__':
+    root=tk.Tk()
+    root.title('Brick Breaker')
+    game = Game(root)
+    game.mainloop()
+
+
 class PlayComponent(object):
     def __init__(self,canvas,item):
         self.item = item
@@ -80,70 +148,3 @@ class Ball(PlayComponent):
         self.move(x,y)
  
 
-
-class Game(tk.Frame):
-    def __init__(self, master):
-        super(Game,self).__init__(master)
-        self.width = 1000;
-        self.height =400;
-
-        self.canvas = tk.Canvas(self,bg='darkorange',width= self.width,
-                                height=self.height)
-        
-        self.canvas.pack()
-        self.pack()
-
-        self.items ={}
-        self.ball = None
-
-        self.paddle=Paddle(self.canvas, self.width/2, 320)
-        self.items[self.paddle.item]=self.paddle
-        
-        for x in range(100,self.width - 100, 60):
-            self.display_brick(x+20, 50, 2)
-
-        self.hud =None
-        self.init_game()
-        self.canvas.focus_set()
-        self.canvas.bind('<Left>',
-                         lambda _:self.paddle.move(-20))
-        self.canvas.bind('<Right>',
-                         lambda _:self.paddle.move(20))
-
-
-    def init_game(self):
-        self.display_ball()
-        self.start_game()
-
-    def display_ball(self):
-        if self.ball is not None:
-            self.ball.delete()
-        paddle_coords = self.paddle.position()
-        x=(paddle_coords[0]+paddle_coords[2])*0.5
-        self.ball = Ball(self.canvas,x,310)
-        self.paddle.set_ball(self.ball)
-
-    def display_brick(self,x,y,hits):
-        brick = Brick(self.canvas,x,y,hits)
-        self.item[brick.item] = brick
-
-
-    def start_game(self):
-        self.canvas.unbind('<space>')
-        self.paddle.ball= None
-    
-    def game_loop(self):
-        num_bricks = len(self.canvas.find_withtag('brick'))
-    
-        if num_bricks ==0:
-            self.ball.speed = None
-        else:
-            self.ball.update()
-            self.after(50, self.game_loop())
-
-
-if __name__=='__main__':
-    root=tk.Tk()
-    root.title('Brick Breaker')
-    game = Game(root)
-    game.mainloop()
